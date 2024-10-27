@@ -8,8 +8,8 @@
 
 ## Aluno
 
-- nome: 
-- matrícula: 
+- nome: Gabrielly Stéphany
+- matrícula: 20232014040012
 
 ## Respostas dos exercícios
 
@@ -27,7 +27,11 @@ Contém:
 
 #### Questão 2:
 Saída do programa: 
-> Valor de X: 2                                      Valor de X: 2                                       Valor de X: 2                                         Valor de X: 2
+> Valor de X: 2                                      
+> Valor de X: 2                                       
+> Valor de X: 2                                         
+> Valor de X: 2
+
 Duração aproximada: 10s (devido aos sleep's)
 
 #### Questão 3:
@@ -38,11 +42,11 @@ Saída do programa: 8 letras X
 Threads são unidades básicas de execução dentro de um processo que compartilham o mesmo espaço de memória e recursos dentro de um processo, mas que executam independentemente.
 As threas permitem dividir uma tarefa em várias partes que podem ser executadas simultaneamente, aumentando a eficiÇencia e o desempenho em aplicações de múltiplas operações. 
 
-### Questão 5:
+#### Questão 5:
 - Vantagens: Maior eficiência e Uso de recursos pelo fato de compartilhar espaço de memória. 
 - Desvantagens: Problemas de sicronização justamente por causa desse compartilhamento de memória, então precisa de um controle mais rigoroso pra que a sicronização aconteca, e falha de seguraças onde erros em uma thread podem comprometer todo o processo. 
 
-### Questão 6:
+#### Questão 6:
 - O Cálculo de Fibonnaci Recusirvo: Cada chamada dpeende dos resultados de chamadas anteriores, de modo que paralelizar o cálculo não resulta em ganho de desempenho. 
 - Processamento de uma lista de Tarefas Pequena: O tempo necessário para criar e gerenciar threas pode ser maior do que o tempo necessário para processar a lista sequencialmente
 
@@ -63,5 +67,7 @@ Duração de execução:
 - N:1 = 30s aproximadamente
 - 1:1 = 12s aproximadamente
 Saída:
-> x: 1, y: 1                                            x: 1, y: 2                                              x: 1, y: 3
+> x: 1, y: 1                                            
+> x: 1, y: 2                                              
+> x: 1, y: 3
 
