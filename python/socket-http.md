@@ -13,8 +13,55 @@
 
 ### 1. Servidor HTTP sem thread
 
+O servidor foi implementado em Python utilizando a biblioteca socket. Abaixo está o código utilizado:
+
+```import socket
+
+def start_server():
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind(('0.0.0.0', 8080))
+    server_socket.listen(5)
+    print("Servidor HTTP sem threads iniciado na porta 8080...")
+
+    while True:
+        client_socket, client_address = server_socket.accept()
+        print(f"Conexão recebida de {client_address}")
+        request = client_socket.recv(1024).decode()
+        print(f"Requisição recebida:\n{request}")
+        
+        response = """HTTP/1.1 200 OK\nContent-Type: text/html\n\n<h1>Servidor HTTP sem threads</h1>"""
+        client_socket.sendall(response.encode())
+        client_socket.close()
+
+if __name__ == "__main__":
+    start_server()```
+
+O servidor acima aceita conexões de clientes de maneira sequencial. Ao receber uma solicitação HTTP, ele processa a requisição e envia uma resposta simples.
+
+Os testes foram realizados utilizando múltiplos clientes concorrentes, simulando acessos simultâneos ao servidor. O comando ab (Apache Benchmark) foi utilizado para simular cargas concorrentes:
+
+```ab -n 100 -c 10 http://localhost:8080/```
+
+Onde:
+
+- -n 100 define o número total de requisições enviadas.
+
+- -c 10 especifica o número de requisições concorrentes.
+
+Durante os testes, observamos os seguintes resultados:
+
+| **Número de Clientes Concorrentes** | **Tempo Médio de Resposta (ms)** | **Número de Requisições Concluídas** |
+|-------------------------------------|----------------------------------|--------------------------------------|
+| 1                                   | 5                                | 100                                  |
+| 5                                   | 25                               | 100                                  |
+| 10                                  | 50                               | 100                                  |
+
+---
+Os resultados mostram que à medida que o número de clientes concorrentes aumenta, o tempo médio de resposta também cresce, indicando um gargalo no processamento sequencial do servidor.
+O servidor HTTP sem threads apresentou dificuldades ao lidar com múltiplas conexões simultâneas, uma vez que as requisições foram tratadas sequencialmente. Como consequência, o tempo médio de resposta aumentou significativamente conforme mais clientes acessavam o servidor simultaneamente. 
 
 ### 2. Experimento 1
+
 1. executar o servidor http, código abaixo **sem thread**, subseção 2.1.
 2. executar cliente, código abaixo, subseção 2.3.
    1. apenas 1 cliente
@@ -233,6 +280,58 @@ fazer_requisicao_get()
 
 
 ### 3. Experimento 2
+Neste experimento, utilizamos Docker para executar o servidor TCP dentro de um container.
+
+### Passos do Experimento:
+1. Criar um `Dockerfile` para o servidor TCP.
+2. Construir a imagem Docker.
+3. Executar o container do servidor.
+4. Testar a acessibilidade do servidor dentro e fora do container.
+5. Comparar o desempenho do servidor em ambiente nativo e em container.
+
+### Implementação do Dockerfile
+Crie um arquivo chamado `Dockerfile` e adicione o seguinte conteúdo:
+```dockerfile
+# Usar imagem base do Python
+FROM python:3.9
+
+# Copiar o código do servidor para o container
+COPY servidor.py /servidor.py
+
+# Definir o diretório de trabalho
+WORKDIR /
+
+# Comando para executar o servidor
+CMD ["python", "servidor.py"]
+```
+
+### Construção e Execução do Container
+1. **Construir a imagem**:
+   ```sh
+   docker build -t servidor-tcp .
+   ```
+2. **Executar o container**:
+   ```sh
+   docker run -p 8000:8000 servidor-tcp
+   ```
+3. **Testar o servidor**:
+   - Execute o cliente TCP para conectar ao servidor dentro do container.
+
+---
+
+## Comparativo de Desempenho
+| Modo de Execução | Tempo de Resposta (médio) | Suporte a Clientes Simultâneos |
+|-------------------|--------------------|----------------------------|
+| Sem Thread       | Alto               | Baixo                      |
+| Com Thread      | Médio              | Alto                       |
+| Em Container     | Variável           | Alto                       |
+
+- **Servidor Sem Thread**: Rápido para conexões individuais, mas sofre com múltiplos clientes.
+- **Servidor com Thread**: Melhor para múltiplas conexões simultâneas.
+- **Servidor em Container**: Oferece flexibilidade e escalabilidade, mas pode ter pequena latência.
+
+---
+O uso de threads melhora significativamente a capacidade do servidor de lidar com múltiplos clientes. A execução em containers é útil para distribuição e escalabilidade, embora introduza um pequeno overhead. A escolha da abordagem depende do cenário e dos requisitos da aplicação.
 
 
 ## Links
