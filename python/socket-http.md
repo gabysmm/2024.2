@@ -13,9 +13,10 @@
 
 ### 1. Servidor HTTP sem thread
 
-O servidor foi implementado em Python utilizando a biblioteca socket. Abaixo está o código utilizado:
+O servidor foi implementado em Python utilizando a biblioteca `socket`. Abaixo está o código utilizado:
 
-```import socket
+```python
+import socket
 
 def start_server():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -34,7 +35,8 @@ def start_server():
         client_socket.close()
 
 if __name__ == "__main__":
-    start_server()```
+    start_server()
+
 
 O servidor acima aceita conexões de clientes de maneira sequencial. Ao receber uma solicitação HTTP, ele processa a requisição e envia uma resposta simples.
 
